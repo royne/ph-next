@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { css } from '@emotion/react';
-import Router from 'next/router'
+import Router, {useRouter} from 'next/router'
 import Layout from '../Components/layout/Layout';
 import { Formulario, Campo, ImputSubmit, Error } from '../Components/ui/Formulario';
-import firebase from '../firebase'
+import {FirebaseContext} from '../firebase'
 import useValidacion from '../hooks/useValidacion'
 import validarCrearProducto from '../validaciones/validarCrearProducto'
 
@@ -18,20 +18,36 @@ const NuevoProducto = () => {
     descripcion: ''
   }
 
-  const { valores, errores, handleSubmit, handleChange, handleBlur } = useValidacion(STATE_INICIAL, validarCrearProducto, crearCuenta)
-
-  async function crearCuenta() {
-    // try {
-    //   await firebase.registrar(nombre, email, password)
-    //   Router.push('/')
-    // } catch (error) {
-    //   console.error('Hubo un error al crear usuario', error.message);
-    //   guardarError(error.message)
-    // }
-  }
+  const { valores, errores, handleSubmit, handleChange, handleBlur } = useValidacion(STATE_INICIAL, validarCrearProducto, crearProducto)
 
   const { nombre, empresa, imagen, url, descripcion } = valores
 
+  // hook routing
+  const router = useRouter()
+
+  // context para  firebase
+  const { usuario, firebase } = useContext(FirebaseContext)
+  
+  async function crearProducto() {
+    // si el usuario no esta autenticado 
+    if(!usuario){
+      return router.push('login')
+    }
+    // crear producto
+    const producto = {
+      nombre,
+      empresa,
+      url,
+      descripcion,
+      votos: 0,
+      comentarios: [],
+      creado: Date.now()
+    }
+    // insertar producto en db
+    firebase.db.collection('productos').add(producto)
+  }
+
+  
   return (
     <div>
       <Layout>
@@ -40,7 +56,7 @@ const NuevoProducto = () => {
             css={css`
               text-align: center;
               margin-top: 5rem;
-            `}  >crear cuenta</h1>
+            `}  >Nuevo producto</h1>
           <Formulario onSubmit={handleSubmit} noValidate>
             <fieldset>
               <legend>informacion general</legend>
@@ -112,7 +128,7 @@ const NuevoProducto = () => {
             {error && <Error>{error}</Error>}
             <ImputSubmit
               type="submit"
-              value="Crear Cuenta" />
+              value="Crear producto" />
           </Formulario>
         </>
       </Layout>

@@ -42,6 +42,7 @@ export const ImputSubmit = styled.input`
   border: none;
   font-family: 'PT Sans', sans-serif;
   font-weight: 700;
+  margin-bottom: 2rem;
   &:hover{
     cursor: pointer;
   }
