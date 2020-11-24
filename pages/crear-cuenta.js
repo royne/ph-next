@@ -2,8 +2,24 @@ import React from 'react'
 import { css } from '@emotion/react';
 import Layout from '../Components/layout/Layout';
 import { Formulario, Campo, ImputSubmit } from '../Components/ui/Formulario';
+import useValidacion from '../hooks/useValidacion'
+import validarCrearCuenta from '../validaciones/validarCrearCuenta'
+
 
 const CrearCuenta = () => {
+  const STATE_INICIAL = {
+    nombre: '',
+    email: '',
+    password: ''
+  }
+
+  const {valores, errores, submitForm, handleSubmit, handleChange} = useValidacion(STATE_INICIAL, validarCrearCuenta, crearCuenta)
+
+  function crearCuenta () {
+    console.log('creando cuenta')
+  }
+
+  const { nombre, email, password } = valores
 
   return (
     <div>
@@ -14,14 +30,16 @@ const CrearCuenta = () => {
               text-align: center;
               margin-top: 5rem;
             `}  >crear cuenta</h1>
-          <Formulario>
+          <Formulario onSubmit={handleSubmit} noValidate>
             <Campo>
               <label htmlFor="nombre">Nombre</label>
               <input 
                 type="text"
                 id="nombre"
                 placeholder="Tunombre"
-                name="nombre" />
+                name="nombre"
+                value={nombre}
+                onChange={handleChange} />
             </Campo>
             <Campo>
               <label htmlFor="email">Email</label>
@@ -29,7 +47,9 @@ const CrearCuenta = () => {
                 type="email"
                 id="email"
                 placeholder="email"
-                name="email" />
+                name="email"
+                value={email}
+                onChange={handleChange} />
             </Campo>
             <Campo>
               <label htmlFor="password">password</label>
@@ -37,7 +57,9 @@ const CrearCuenta = () => {
                 type="password"
                 id="password"
                 placeholder="password"
-                name="password" />
+                name="password"
+                value={password}
+                onChange={handleChange} />
             </Campo>
             <ImputSubmit 
               type="submit"
