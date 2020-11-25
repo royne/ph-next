@@ -34,7 +34,7 @@ const Layout = props => {
             font-weight: 700;
           }
           h3{
-            font-famile: 'PT Sans', sans-serif;
+            font-family: 'PT Sans', sans-serif;
           }
           ul {
             list-style: none;
@@ -43,6 +43,9 @@ const Layout = props => {
           }
           a {
             text-decoration: none;
+          }
+          img {
+            max-width: 100%;
           }
         `} >
 

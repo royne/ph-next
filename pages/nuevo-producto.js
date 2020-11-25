@@ -4,6 +4,7 @@ import Router, { useRouter } from 'next/router';
 import uuid from 'react-uuid'
 import Layout from '../Components/layout/Layout';
 import { Formulario, Campo, ImputSubmit, Error } from '../Components/ui/Formulario';
+import Error404 from '../Components/layout/Error404'
 
 import { FirebaseContext } from '../firebase';
 
@@ -56,7 +57,11 @@ const NuevoProducto = () => {
       descripcion,
       votos: 0,
       comentarios: [],
-      creado: Date.now()
+      creado: Date.now(),
+      creador: {
+        id: usuario.uid,
+        nombre: usuario.displayName
+      }
     }
 
     // insertarlo en la base de datos
@@ -83,6 +88,8 @@ const NuevoProducto = () => {
         console.log(storageRef);
     })
   };
+
+  if (!usuario) return <Layout><Error404 /></Layout>
 
   return (
     <div>
