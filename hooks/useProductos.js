@@ -20,7 +20,6 @@ const useProductos = orden => {
         ...doc.data()
       }
     })
-    debugger
     guardarProductos(productos)
   }
   return productos
